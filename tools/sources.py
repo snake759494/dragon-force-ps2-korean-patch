@@ -90,7 +90,7 @@ def bank_rebuild(e, tr, enc, wrap):
             if it[0] != 't': continue
             ko = tr(turn_text(it[1]))
             if ko is None: continue
-            it[1] = [[textcodec.from_text(l, enc) for l in pg] for pg in wrap(ko)]
+            it[1] = [[textcodec.from_text(l, enc) for l in pg] for pg in wrap(ko, [bankpages.page_text(pg) for pg in it[1]])]
         ents.append(turns_join(items))
     return bank.build(d, info, ents)
 
@@ -184,7 +184,7 @@ def ev_rebuild(e, tr, enc, wrap):
             if it[0] != 't': continue
             ko = tr(ev_text(it[1]))
             if ko is None: continue
-            pages = wrap(ko)
+            pages = wrap(ko, [ev_text([pg]) for pg in it[1]])
             last = it[2][-1]
             it[1] = [CR.join(textcodec.from_text(l, enc) for l in pg) for pg in pages]
             it[2] = [CR] * (len(pages) - 1) + [last]

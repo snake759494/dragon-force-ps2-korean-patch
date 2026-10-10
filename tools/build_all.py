@@ -65,8 +65,17 @@ def enc(s):
     return hangul.encode(s)
 
 
-def dlg_wrap(ko):
-    return wrap.paginate(ko, 13.0, 2)
+NOFIT = []
+
+
+def dlg_wrap(ko, orig):
+    """원문 쪽 수 그대로(음성이 쪽마다 차례로 재생됨). orig = 원문 쪽 텍스트 목록."""
+    n = len(orig); wts = [max(1, len(t)) for t in orig]
+    pages = wrap.fit_pages(ko, n, wts)
+    if pages is None:
+        NOFIT.append((orig, ko))
+        pages = wrap.fit_pages(ko, n, wts, nlines=3) or wrap.fit_pages(ko, n, wts, maxw=20.0, nlines=3)
+    return pages
 
 
 # ------------------------------------------------------------------ 각 원천
@@ -84,8 +93,8 @@ def build_ev(T, mods, report):
         report.append((e, len(data0.read(e)), len(d), SLOT_EVENT)); mods[e] = d
 
 
-def shout_encode(ko):
-    pages = wrap.paginate(ko, 13.0, 2)
+def shout_encode(ko, orig):
+    pages = dlg_wrap(ko, orig.split(NL + NL))
     return '$'.join('#'.join(p) for p in pages)
 
 
@@ -95,7 +104,7 @@ def build_shout(T, mods, report):
         new = []
         for s in ents[o]:
             ko = T(sources.shout_text(s))
-            new.append(s if ko is None else textcodec.from_text(shout_encode(ko), enc))
+            new.append(s if ko is None else textcodec.from_text(shout_encode(ko, sources.shout_text(s)), enc))
         ents[o] = new
     r = sources.strlist_build(offs, ents, 182)
     report.append((1560, len(d), len(r), SLOT_EVENT)); mods[1560] = r

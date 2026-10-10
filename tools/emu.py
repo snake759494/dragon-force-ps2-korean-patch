@@ -33,9 +33,11 @@ def _windows():
 
 def game_hwnd():
     """게임 화면 창(제목에 FPS/게임명이 붙는 PCSX2 메인창)."""
-    for h, t, pid, vis in _windows():
-        if vis and ('PCSX2' in t or 'Dragon' in t or 'SLPM' in t or 'ドラゴン' in t):
-            return h
+    ws = [w for w in _windows() if w[3]]
+    for h, t, pid, vis in ws:                       # 게임 이름이 붙은 창 우선(다른 PCSX2 창 무시)
+        if 'Dragon' in t or 'SLPM' in t or 'ドラゴン' in t: return h
+    for h, t, pid, vis in ws:
+        if 'PCSX2' in t: return h
     return None
 
 def _targets(h):
