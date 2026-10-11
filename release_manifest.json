@@ -1,17 +1,17 @@
 {
- "version": "v1.1",
+ "version": "v1.2",
  "date": "2026-10-11",
  "game": "SEGA AGES 2500 Series Vol.18 Dragon Force (Japan) / SLPM-65778 / PS2 (DVD, ISO)",
- "asset": "DragonForce_PS2_KO_v1.1.xdelta",
- "asset_size": 27652786,
- "asset_sha256": "3be4a7a8ec43fa172ecbbcb9a350990f35b1e87caaeb5e5aa4119185b355fdce",
+ "asset": "DragonForce_PS2_KO_v1.2.xdelta",
+ "asset_size": 27483188,
+ "asset_sha256": "3df772625f7c081215d874b2a18fd5f618e6ad42ebd0c9147802bcaacc4c3303",
  "xdelta_options": "xdelta3 3.1.0, -e -0 -S none -A -B 2147483648 (no compression, no secondary compression, no application header)",
  "source_iso_size": 4690051072,
  "source_iso_md5": "ce3864ac5a611a5313adac4257826da1",
  "source_iso_sha1": "d2ec59db4790c6c26e4cc9f87a2827cc6f0b1281",
  "source_iso_sha256": "1f31435239c2e5a9967a4a3acbc4dac978283b3a3d9b3a45af673ce057a87a60",
  "output_iso_size": 4690051072,
- "output_iso_md5": "1ef097c6760747bf1373752a07aeca0c",
- "output_iso_sha1": "66fe3820c2fbb2fda067757aa6e2dc1c9af6f39c",
- "output_iso_sha256": "66d0e9cb454ea614ad9f459ea55a3916272400a42d36592ccecf908ceab69224"
+ "output_iso_md5": "35401294e203205fa317b9ca751656a2",
+ "output_iso_sha1": "3010f43eed95ba1273ec9bc045ef4fe10769faec",
+ "output_iso_sha256": "9e0f2f853e1652cde695fdf7712259241132505df01b48f27e65fa4a235f33d6"
 }

@@ -20,7 +20,7 @@ def load_tr():
     p = os.path.join(TR, 'units.json')       # 원본 ISO 에서 tools/extract.py 로 다시 만드는 파일(선택)
     units = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else []
     tr = {}
-    files = sorted(glob.glob(os.path.join(TR, 'out', '*.json'))) + [f for f in sorted(glob.glob(os.path.join(TR, 'ko', '*.json'))) if not f.endswith('bin_alt.json')]
+    files = sorted(glob.glob(os.path.join(TR, 'out', '*.json'))) + [f for f in sorted(glob.glob(os.path.join(TR, 'ko', '*.json'))) if not f.endswith(('bin_alt.json', 'pages.json'))]
     for f in files:
         for k, v in json.load(open(f, encoding='utf-8')).items():
             if isinstance(v, str) and v.strip(): tr[k] = v
@@ -68,9 +68,16 @@ def enc(s):
 NOFIT = []
 
 
+PAGES = {}   # translation/ko/pages.json: {원문 키: [쪽별 번역]} — 원문 쪽 내용(음성)과 맞춘 번역
+
+
 def dlg_wrap(ko, orig):
     """원문 쪽 수 그대로(음성이 쪽마다 차례로 재생됨). orig = 원문 쪽 텍스트 목록."""
     n = len(orig); wts = [max(1, len(t)) for t in orig]
+    pv = PAGES.get(uid((NL + NL).join(orig)))
+    if pv and len(pv) == n:
+        pages = [wrap.wrap_lines(' '.join(fix_josa(norm(p)).split()), 14.0) for p in pv]
+        if all(len(p) <= 2 for p in pages): return pages
     pages = wrap.fit_pages(ko, n, wts)
     if pages is None:
         NOFIT.append((orig, ko))
@@ -261,6 +268,8 @@ def charset_from(trd):
 
 def main(noiso=False):
     units, trd = load_tr()
+    p = os.path.join(TR, 'ko', 'pages.json')
+    if os.path.exists(p): PAGES.update(json.load(open(p, encoding='utf-8')))
     p = os.path.join(TR, 'ko', 'bin_alt.json')
     if os.path.exists(p): BIN_ALT.update(json.load(open(p, encoding='utf-8')))
     print('번역 %d / 단위 %d' % (len(trd), len(units)))
