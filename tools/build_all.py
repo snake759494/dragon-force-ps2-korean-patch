@@ -257,6 +257,55 @@ def build_bins(pool_new):
     return files
 
 
+# ---------------------------------------------------------------- v1.3 (이슈 #2)
+ITEM_LIST = ('READY.BIN', 0x7a8c8, 0x7bd80)   # 아이템·인물 이름 목록(대사 변수 ⟦V 0F⟧ 등이 바로 읽음)
+FW_SP = '　'.encode('cp932')
+
+
+def fix_item_list(pool_new, files):
+    """대사 변수로 들어가는 이름 목록: ① 한자 5자라 문자열 탐지에서 빠진 이름(竜騎士徽章 등) 번역,
+    ② 반각 공백 → 전각 공백(변수 칸은 2바이트 단위로 그려서 반각이 끼면 뒤 글자가 깨짐)."""
+    name, a, b = ITEM_LIST
+    keys = sources.pool_keys(); kidx = {}
+    for i, k in enumerate(keys): kidx.setdefault(k, i)
+    o = sources.bin_data(name); d = bytearray(files['/' + name]); n = 0
+    for m in re.finditer(rb'[^\x00]+', o[a:b]):
+        x = a + m.start(); s = m.group()
+        if not any(0x81 <= c <= 0x9f or 0xe0 <= c <= 0xef for c in s): continue
+        q = x + len(s)
+        while o[q] == 0: q += 1
+        avail = q - x - 1
+        cur = bytes(d[x:d.index(0, x)])
+        if cur == s and kidx.get(s) in pool_new: cur = pool_new[kidx[s]]
+        new = cur.replace(b' ', FW_SP)
+        if len(new) > avail: new = cur.replace(b' ', b'')
+        if new != bytes(d[x:d.index(0, x)]) and len(new) <= avail:
+            d[x:x + avail] = new + b'\0' * (avail - len(new)); n += 1
+    files['/' + name] = bytes(d)
+    print('  이름 목록 교정 %d' % n)
+
+
+LORDS = [('ｼﾞｭﾉｰﾝ', '주논'), ('ｺﾞﾝｺﾞｽ', '곤고스'), ('ﾚｵﾝ   ', '레온'), ('ﾚｲﾅｰﾄ ', '레이나'),
+         ('ﾐｶﾂﾞｷ ', '미카즈'), ('ﾃｨﾘｽ  ', '티리스'), ('ｺﾞﾙﾀﾞｸ', '골다크'), ('ｳｪｲﾝ  ', '웨인')]
+
+
+def fix_lords(mods, files):
+    """세이브 설명(BUP 주석 6바이트)에 쓰는 군주 반각 이름표. 저장할 때는 풀 치환으로 한글이 들어가지만
+    데이터 화면은 원래 표와 비교해 군주를 찾으므로 못 찾고 9번째 무장(로우)을 보여 줬다 → 표 자체를 한글로."""
+    old = b''.join(j.encode('cp932') + b'\0\0' for j, k in LORDS)
+    new = b''
+    for j, k in LORDS:
+        v = enc(k); v = v + b' ' * (6 - len(v)); assert len(v) == 6; new += v + b'\0\0'
+    n = 0
+    for nm in ['/SLPM_657.78', '/OPEN.BIN', '/READY.BIN', '/APPLI.BIN']:
+        d = files.get(nm) or iso.readfile(nm)
+        if old in d: files[nm] = d.replace(old, new); n += d.count(old)
+    for e in (17, 18, 19):
+        d = mods.get(e) or data0.read(e)
+        if old in d: mods[e] = d.replace(old, new); n += d.count(old)
+    print('  군주 이름표 교체 %d곳' % n)
+
+
 def charset_from(trd):
     cs = set()
     for v in trd.values(): cs.update(c for c in v if '가' <= c <= '힣')
@@ -292,6 +341,7 @@ def main(noiso=False):
         b[0x7680:0x7680 + n] = mods[769][:n]; mods[e] = bytes(b)
     import titles
     titles.build(mods)          # 陣形選択·一騎討ち 제목 그림
+    fix_item_list(pool_new, files); fix_lords(mods, files)
     bad = [r for r in report if r[2] > r[3]]
     for e, a, b, lim in report:
         if b > lim or b > a * 1.15: print('  %5d %7d → %7d (한계 %d)%s' % (e, a, b, lim, ' ★초과' if b > lim else ''))
