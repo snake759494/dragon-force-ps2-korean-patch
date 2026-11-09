@@ -306,6 +306,47 @@ def fix_lords(mods, files):
     print('  군주 이름표 교체 %d곳' % n)
 
 
+# v1.4: 세이브 목록·타이틀 이어하기의 군주 이름(반각 표 → 풀 치환으로 8바이트 '미카즈키'가 되어 'Lv' 와 겹침)
+NAMES2_READY = bytes.fromhex('bcdeadc9b0dd0000badeddbadebd0000dab5dd0000000000dab2c5b0c4000000'
+                             'd0b6c2deb7000000c3a8d8bd00000000baded9c0deb0b800b3aab2dd00000000')
+NAMES2_TITLE = bytes.fromhex('bcadc9b0dd000000baddbabd00000000dab5dd0000000000dab2c5b0c4000000'
+                             'd0b6c2b700000000c3a8d8bd00000000bad9c0b0b8000000b3aab2dd00000000'
+                             'de000000000000002020de0000000000de20de0000000000')
+
+
+def fix_lord_names(mods, files):
+    """데이터 화면 목록은 이름을 버퍼 0~7 에 복사하고 8 에 'Lv' 를 쓴다 → 한글 6바이트(군주 표와 같은 이름).
+    타이틀용 표는 탁점 줄이 따로 있으므로 탁점 줄은 공백으로."""
+    ko = b''.join(enc(k).ljust(8, bytes(1)) for j, k in LORDS)
+    new_r = ko
+    new_t = ko + bytes.fromhex('20000000000000002020200000000000202020000000000000')[:24]
+    n = 0
+    for nm in ['/SLPM_657.78', '/OPEN.BIN', '/READY.BIN', '/APPLI.BIN']:
+        d = files.get(nm) or iso.readfile(nm)
+        c = d.count(NAMES2_READY) + d.count(NAMES2_TITLE)
+        if c: files[nm] = d.replace(NAMES2_READY, new_r).replace(NAMES2_TITLE, new_t); n += c
+    for e in (17, 18, 19):
+        d = mods.get(e) or data0.read(e)
+        c = d.count(NAMES2_READY) + d.count(NAMES2_TITLE)
+        if c: mods[e] = d.replace(NAMES2_READY, new_r).replace(NAMES2_TITLE, new_t); n += c
+    print('  세이브 목록 군주 이름 교체 %d곳' % n)
+
+
+RAW_MODULE = [('師団長選択', '사단장선택')]   # v1.4: 출진 화면 제목(새턴 모듈 983~990 이 직접 그림)
+
+
+def fix_raw_module(mods, files):
+    n = 0
+    for jp, ko in RAW_MODULE:
+        old = jp.encode('cp932') + bytes(1); new = enc(ko) + bytes(1); assert len(new) == len(old)
+        for e in [17] + list(range(983, 991)):
+            d = mods.get(e) or data0.read(e)
+            if old in d: mods[e] = d.replace(old, new); n += d.count(old)
+        d = files.get('/APPLI.BIN') or iso.readfile('/APPLI.BIN')
+        if old in d: files['/APPLI.BIN'] = d.replace(old, new); n += d.count(old)
+    print('  모듈 문자열 교체 %d곳' % n)
+
+
 def charset_from(trd):
     cs = set()
     for v in trd.values(): cs.update(c for c in v if '가' <= c <= '힣')
@@ -341,7 +382,7 @@ def main(noiso=False):
         b[0x7680:0x7680 + n] = mods[769][:n]; mods[e] = bytes(b)
     import titles
     titles.build(mods)          # 陣形選択·一騎討ち 제목 그림
-    fix_item_list(pool_new, files); fix_lords(mods, files)
+    fix_item_list(pool_new, files); fix_lords(mods, files); fix_lord_names(mods, files); fix_raw_module(mods, files)
     bad = [r for r in report if r[2] > r[3]]
     for e, a, b, lim in report:
         if b > lim or b > a * 1.15: print('  %5d %7d → %7d (한계 %d)%s' % (e, a, b, lim, ' ★초과' if b > lim else ''))

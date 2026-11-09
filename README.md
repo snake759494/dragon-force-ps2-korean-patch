@@ -1,10 +1,10 @@
 # 드래곤 포스 (Dragon Force) PS2 한글패치
 
-PS2 일본판 **SEGA AGES 2500 シリーズ Vol.18 ドラゴンフォース (SLPM-65778)** 용 비공식 한국어 패치입니다. 8개국 시나리오의 이벤트 대사 전체, 장수 대사, 전투 함성, 메뉴·시스템 문자열, EXTRA 도감, 군주 소개·지도 등 그림 속 글자, 전투 화면의 이름·제목 그림까지 한국어로 바꿨습니다(번역 단위 18,350개). 현재 배포판은 **v1.3 (2026-11-08)** 입니다.
+PS2 일본판 **SEGA AGES 2500 シリーズ Vol.18 ドラゴンフォース (SLPM-65778)** 용 비공식 한국어 패치입니다. 8개국 시나리오의 이벤트 대사 전체, 장수 대사, 전투 함성, 메뉴·시스템 문자열, EXTRA 도감, 군주 소개·지도 등 그림 속 글자, 전투 화면의 이름·제목 그림까지 한국어로 바꿨습니다(번역 단위 18,350개). 현재 배포판은 **v1.4 (2026-11-09)** 입니다.
 
 [패치 다운로드](https://github.com/snake759494/dragon-force-ps2-korean-patch/releases/latest) · [기술 설명](docs/TECHNICAL.md) · [재빌드](docs/BUILD.md) · [변경 기록](CHANGELOG.md) · [권리 안내](RIGHTS.md)
 
-릴리즈 첨부 파일은 **DragonForce_PS2_KO_v1.3.xdelta** 와 PCSX2 용 패치 파일(`.pnach`)입니다. 저장소에는 제작 도구·번역 결과·검증 자료만 공개합니다. 원본 및 완성 디스크 이미지, 게임에서 추출한 파일, 일본어 원문 대사, 글꼴 파일, 외부 실행 파일은 포함하지 않습니다.
+릴리즈 첨부 파일은 **DragonForce_PS2_KO_v1.4.xdelta** 와 PCSX2 용 패치 파일(`.pnach`)입니다. 저장소에는 제작 도구·번역 결과·검증 자료만 공개합니다. 원본 및 완성 디스크 이미지, 게임에서 추출한 파일, 일본어 원문 대사, 글꼴 파일, 외부 실행 파일은 포함하지 않습니다.
 
 > ⚠️ `translation/` 폴더에는 게임 대사 번역 전문이 들어 있어 **줄거리 스포일러**가 포함됩니다.
 
@@ -20,11 +20,11 @@ PS2 일본판 **SEGA AGES 2500 シリーズ Vol.18 ドラゴンフォース (SLP
 | **원본 ISO MD5** | `ce3864ac5a611a5313adac4257826da1` |
 | 원본 ISO SHA-1 | `d2ec59db4790c6c26e4cc9f87a2827cc6f0b1281` |
 | 원본 ISO SHA-256 | `1f31435239c2e5a9967a4a3acbc4dac978283b3a3d9b3a45af673ce057a87a60` |
-| xdelta 파일 크기 | 27,483,677 바이트 |
-| xdelta SHA-256 | `d87613a1b5d818368378dbcaaab1e0050d1bd34bf6f01707d37f3cecbfe31c74` |
+| xdelta 파일 크기 | 27,481,111 바이트 |
+| xdelta SHA-256 | `f3692f1a464f01dd15f514e1da39ce6416e61d8345a2bd9804b50296941ebdb5` |
 | 적용 결과 ISO 크기 | 4,690,051,072 바이트 (원본과 같음) |
-| 적용 결과 ISO SHA-1 | `e2d9bc359e64a5214b64b6f23884f2d1109d473c` |
-| 적용 결과 ISO SHA-256 | `27de4826df1a93af47066e97813a6141ee1518bcf4a9692ab77e7c7b76037502` |
+| 적용 결과 ISO SHA-1 | `6edc41cdcbaaa155293a467b60d8109783f37f6e` |
+| 적용 결과 ISO SHA-256 | `8d4d384b24d21677983a4619a4ad843a27f5c972bacea071c2648befac377852` |
 
 ## 패치 적용 방법
 
@@ -38,7 +38,7 @@ Get-FileHash -Algorithm MD5 -LiteralPath ".\Sega Ages 2500 Series Vol. 18 - Drag
 
 ### xdelta UI 사용
 
-1. 릴리즈에서 `DragonForce_PS2_KO_v1.3.xdelta` 를 받습니다.
+1. 릴리즈에서 `DragonForce_PS2_KO_v1.4.xdelta` 를 받습니다.
 2. xdelta3 패치 도구의 **Apply Patch** 를 엽니다.
 3. **Patch** 에 xdelta 파일, **Source File** 에 해시가 일치하는 원본 ISO 를 선택합니다.
 4. **Output File** 에 새 파일명(예: `Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan) (Korean).iso`)을 지정합니다.
@@ -48,13 +48,13 @@ xdelta 는 호환성을 위해 압축 없이(`-0`), 2차 압축과 파일 경로
 ### 명령줄 사용
 
 ```powershell
-.\xdelta3.exe -d -s ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan).iso" .\DragonForce_PS2_KO_v1.3.xdelta ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan) (Korean).iso"
+.\xdelta3.exe -d -s ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan).iso" .\DragonForce_PS2_KO_v1.4.xdelta ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan) (Korean).iso"
 ```
 
 해시를 자동 검사하는 도구도 있습니다(Python 3 + xdelta3 필요, 기존 출력 파일은 덮어쓰지 않음).
 
 ```powershell
-python tools/apply_release.py --xdelta .\xdelta3.exe --source ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan).iso" --patch .\DragonForce_PS2_KO_v1.3.xdelta --output ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan) (Korean).iso"
+python tools/apply_release.py --xdelta .\xdelta3.exe --source ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan).iso" --patch .\DragonForce_PS2_KO_v1.4.xdelta --output ".\Sega Ages 2500 Series Vol. 18 - Dragon Force (Japan) (Korean).iso"
 ```
 
 ### PCSX2 에서 실행
@@ -82,6 +82,7 @@ PS2 판은 PS2 계층 위에서 새턴 SH-2 프로그램을 실행하는 구조�
 
 - v1.1 에서 쪽 수, v1.2 에서 쪽마다의 내용을 원문과 맞춰 음성과 대사가 어긋나던 문제를 고쳤습니다.
 - v1.3 에서 게임 중 데이터 화면의 군주 이름(모두 「로우」로 나옴)과 탐색으로 얻은 휘장·코인 이름이 깨지던 문제를 고쳤습니다(이슈 #2).
+- v1.4 에서 데이터 화면 세이브 목록의 군주 이름 겹침, 병종 이름 통일(2글자), 출진 화면 제목 깨짐을 고쳤습니다(이슈 #3). 특기(스킬) 이름이 칸에서 잘리는 점은 이번에 다루지 않았습니다.
 - 16:9 와이드 패치는 없습니다. 새턴 2D 화면(4:3 고정)을 그대로 그리는 구조라 화면을 넓히면 그림이 늘어나기만 합니다. 릴리즈의 `.pnach` 는 PCSX2 공식 인터레이스 끄기 패치를 한글판 CRC 에 맞춘 것입니다.
 
 - 동영상 자막은 넣지 못했습니다. PS2 동영상 재생기가 다시 인코딩한 영상에서 멈추는 문제가 있어 원본 영상을 그대로 둡니다.
