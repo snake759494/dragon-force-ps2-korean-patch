@@ -22,7 +22,10 @@ def small_set():
     p = os.path.join(ROOT, 'translation', 'ko', 'halfkana.json')
     if not os.path.exists(p): return []
     h = json.load(open(p, encoding='utf-8'))
-    return sorted(set(c for v in h.values() for c in v if '가' <= c <= '힣'))
+    vals = list(h.values())
+    q = os.path.join(ROOT, 'translation', 'ko', 'unit_names.json')   # v1.5: 병종 이름(메달 목록 등 작은 글꼴)
+    if os.path.exists(q): vals += list(json.load(open(q, encoding='utf-8')).values())
+    return sorted(set(c for v in vals for c in v if '가' <= c <= '힣'))
 
 
 def charset():
